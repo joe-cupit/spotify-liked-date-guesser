@@ -19,7 +19,8 @@
   --fw-medium: 600;
   --fw-bold: 800;
 
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
 }
 * {
   box-sizing: border-box;
@@ -77,6 +78,7 @@ a {
 .primary-button {
   font-weight: var(--fw-medium);
 
+  color: var(--clr-base-0);
   background: var(--clr-base-600);
   border: none;
   padding: 0.5em 1em;
@@ -143,7 +145,12 @@ footer {
   flex-direction: column;
   align-items: center;
 
+  flex: 1;
+
   padding-block: 1em;
+}
+.play-page {
+  gap: 3rem;
 }
 
 .title {
@@ -154,20 +161,31 @@ footer {
 
 .spotify-track {
   display: flex;
-  gap: 0.5em;
-  align-items: end;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+
+  text-align: center;
 }
 .spotify-track img {
-  width: 7em;
-  height: 7em;
+  width: 12em;
+  height: 12em;
 }
 .spotify-track__name-artist {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 .spotify-track__name {
-  font-size: 1.5em;
-  font-weight: var(--fw-medium);
+  font-size: 2em;
+  font-weight: var(--fw-bold);
+}
+
+.guess-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
 }
 
 .date-input {
@@ -175,7 +193,7 @@ footer {
   gap: 1em;
 
   font-size: 2.5rem;
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-medium);
 }
 .date-input__group {
   display: flex;

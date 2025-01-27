@@ -1,94 +1,18 @@
-<html>
+<!doctype html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Spotify Liked Songs</title>
 
-    <script src="scripts/utils.js"></script>
-    <script src="scripts/spotify.js"></script>
-    <script src="scripts/dateInput.js"></script>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
 
   <body>
-    <nav>
-      <div class="navbar">
-        <a href="/spotify/">Hello world!</a>
-
-        <div class="navbar__right">
-          <div id="navbar__user" class="navbar__user-profile" style="display: none">
-            <img id="navbar__user-image" src="" alt="" />
-            <p id="navbar__user-name"></p>
-          </div>
-          <button id="navbar__login-button"
-            class="primary-button"
-            onclick="getAccessCode()"
-          >
-            Log in
-          </button>
-        </div>
-      </div>
-    </nav>
-
-    <main>
-      <div class="main">
-        <h1 class="title">Spotify Liked Songs History</h1>
-
-        <button class="primary-button" onclick="refreshToken()">
-          Refresh Access Token
-        </button>
-
-        <button class="primary-button" onclick="getRandomLikedSong()">
-          Get Random Liked Song
-        </button>
-
-        <div id="spotify-track" class="spotify-track">
-          <img id="spotify-track__album-cover" src="" alt="" />
-          <div class="spotify-track__name-artist">
-            <p id="spotify-track__name" class="spotify-track__name"></p>
-            <p id="spotify-track__artists"></p>
-          </div>
-        </div>
-        <p id="spotify-track__added-date"></p>
-
-        <div class="date-input">
-          <div class="date-input__group">
-            <button class="primary-button" onclick="decrementYear()">^</button>
-            <p id="date-input__year"></p>
-            <button class="primary-button" onclick="incrementYear()">v</button>
-          </div>
-
-          <div class="date-input__group date-input__group_month">
-            <button class="primary-button" onclick="decrementMonth()">^</button>
-            <p id="date-input__month"></p>
-            <button class="primary-button" onclick="incrementMonth()">v</button>
-          </div>
-
-          <div class="date-input__group">
-            <button class="primary-button" onclick="decrementDay()">^</button>
-            <p id="date-input__day"></p>
-            <button class="primary-button" onclick="incrementDay()">v</button>
-          </div>
-        </div>
-
-        <button class="primary-button">Make guess</button>
-      </div>
-    </main>
-
-    <footer>
-      <div class="footer">
-        <span>&copy; 2025</span>
-      </div>
-    </footer>
-
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
-
-  <script>
-    // if (localStorage.getItem("spotify_access_token")) {
-    //   getUserDetails()
-    // }
-    setUserDetails()
-
-    document.getElementById("date-input__year").innerText = currentYear;
-    document.getElementById("date-input__month").innerText = getMonth[currentMonth];
-    document.getElementById("date-input__day").innerText = currentDay;
-  </script>
 </html>

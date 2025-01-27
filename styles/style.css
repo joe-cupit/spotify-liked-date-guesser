@@ -1,0 +1,191 @@
+:root {
+  --clr-base-0: hsl(125, 15%, 0%);
+  --clr-base-100: hsl(125, 15%, 5%);
+  --clr-base-200: hsl(125, 15%, 10%);
+  --clr-base-300: hsl(125, 15%, 20%);
+  --clr-base-400: hsl(125, 15%, 40%);
+  --clr-base-500: hsl(125, 15%, 50%);
+  --clr-base-600: hsl(125, 15%, 60%);
+  --clr-base-700: hsl(125, 15%, 70%);
+  --clr-base-800: hsl(125, 15%, 90%);
+  --clr-base-900: hsl(125, 15%, 95%);
+  --clr-base-1000: hsl(125, 15%, 100%);
+  
+  
+  --fs-body: 1.125em;
+  --fs-title: 2.5em;
+  
+  --fw-regular: 400;
+  --fw-medium: 600;
+  --fw-bold: 800;
+
+  font-family: 'Courier New', Courier, monospace;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+::selection {
+  color: hsl(125, 25%, 5%);
+  background: hsl(125, 50%, 70%, 0.8);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+
+  font-size: var(--fs-body);
+  color: var(--clr-base-900);
+  background: var(--clr-base-100);
+
+  min-height: 100vh;
+}
+
+nav,
+main,
+footer {
+  --min-padding: 2em;
+  --max-width: 1100px;
+
+  display: grid;
+  grid-template-columns:
+    [full-width-start]
+      minmax(var(--min-padding), 1fr)
+    [content-start]
+      min(100% - 2 * var(--min-padding), var(--max-width))
+    [content-end]
+      minmax(var(--min-padding), 1fr)
+    [full-width-end];
+}
+nav > *,
+main > *,
+footer > * {
+  grid-column: content;
+}
+main {
+  --max-width: 1000px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+.primary-button {
+  font-weight: var(--fw-medium);
+
+  background: var(--clr-base-600);
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 0.5em;
+
+  cursor: pointer;
+
+  transition: background-color 100ms;
+}
+.primary-button:hover {
+  background: var(--clr-base-700);
+}
+
+
+nav,
+footer {
+  background: var(--clr-base-200);
+}
+nav {
+  position: sticky;
+  top: 0;
+}
+footer {
+  margin-top: auto;
+}
+.navbar,
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding-block: 0.5em;
+}
+
+.navbar__right {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+}
+.navbar__user-profile {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+
+  padding: 0.5em;
+  border-radius: 0.5em;
+
+  background: #0003;
+  transition: background-color 100ms;
+}
+.navbar__user-profile:hover {
+  background: #0005;
+}
+.navbar__user-profile img {
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.main {
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+  align-items: center;
+
+  padding-block: 1em;
+}
+
+.title {
+  font-size: var(--fs-title);
+  font-weight: var(--fw-bold);
+  text-align: center;
+}
+
+.spotify-track {
+  display: flex;
+  gap: 0.5em;
+  align-items: end;
+}
+.spotify-track img {
+  width: 7em;
+  height: 7em;
+}
+.spotify-track__name-artist {
+  display: flex;
+  flex-direction: column;
+}
+.spotify-track__name {
+  font-size: 1.5em;
+  font-weight: var(--fw-medium);
+}
+
+.date-input {
+  display: flex;
+  gap: 1em;
+
+  font-size: 2.5rem;
+  font-weight: var(--fw-bold);
+}
+.date-input__group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 4ch;
+}
+.date-input__group button {
+  font-size: 1rem;
+}
+.date-input__group_month {
+  min-width: 9ch;
+}

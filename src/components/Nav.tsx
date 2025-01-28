@@ -14,22 +14,26 @@ export default function Nav() {
         <Link to="/">Hello world!</Link>
 
         <div className="navbar__right">
-          {SpotifyApi?.currentUser &&
-            <div id="navbar__user" className="navbar__user-profile">
-              <img id="navbar__user-image" src={SpotifyApi?.currentUser?.displayImageUrl} alt={SpotifyApi?.currentUser?.displayName + " Spotify display image"} />
-              <p id="navbar__user-name">{SpotifyApi?.currentUser?.displayName}</p>
-            </div>
+          {SpotifyApi?.currentUser?.displayName
+          ? <>
+              <div id="navbar__user" className="navbar__user-profile">
+                <img id="navbar__user-image" src={SpotifyApi?.currentUser?.displayImageUrl} alt={SpotifyApi?.currentUser?.displayName + " Spotify display image"} />
+                <p id="navbar__user-name">{SpotifyApi?.currentUser?.displayName}</p>
+              </div>
+              <button id="navbar__login-button"
+                className="primary-button"
+                onClick={() => SpotifyApi?.logOut()}
+              >
+                Log out
+              </button>
+            </>
+          : <button id="navbar__login-button"
+              className="primary-button"
+              onClick={() => SpotifyApi?.initiateLogin()}
+            >
+              Log in
+            </button>
           }
-          <button id="navbar__login-button"
-            className="primary-button"
-            onClick={() => SpotifyApi?.initiateLogin()}
-          >
-            Log in
-          </button>
-          {/* <button className="primary-button" onClick={() => SpotifyApi?.refreshAccessToken()}
-          >
-            Refresh Access Token
-          </button> */}
         </div>
       </div>
     </nav>

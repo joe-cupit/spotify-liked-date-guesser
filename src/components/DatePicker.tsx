@@ -1,14 +1,18 @@
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 
-export default function DatePicker() {
+export default function DatePicker({ currentDate, setCurrentDate } : { currentDate: Date, setCurrentDate: React.Dispatch<React.SetStateAction<Date>> }) {
 
   const Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   const MinYear = 2018
 
-  const [currentYear, setCurrentYear] = useState(2020);
-  const [currentMonth, setCurrentMonth] = useState(1);
-  const [currentDay, setCurrentDay] = useState(1);
+  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+  const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth()+1);
+  const [currentDay, setCurrentDay] = useState(currentDate.getDate());
+
+  useEffect(() => {
+    setCurrentDate(new Date(`${currentYear}-${currentMonth}-${currentDay}`))
+  }, [currentYear, currentMonth, currentDay])
 
   function maxDayBasedOnMonth() {
     let maxDay = 31;

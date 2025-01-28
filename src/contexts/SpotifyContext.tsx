@@ -2,9 +2,18 @@ import { createContext, useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 
+export type Track = {
+  name: string,
+  artists: string[],
+  albumCover: string,
+  addedDate: Date
+}
+
 type SpotifyUser = {
   displayName: string,
-  displayImageUrl: string
+  displayImageUrl: string,
+  likedSongCount: number | null,
+  earliestLikedSong: Date | null
 } | null
 
 type SpotifyApi = {
@@ -113,7 +122,8 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
       .finally(() => Navigate("/"));
   }
 
-  function refreshAccessToken() {
+  async function refreshAccessToken() {
+    console.log("refreshing!")
     const tokenUrl = "https://accounts.spotify.com/api/token";
     const refreshToken = localStorage.getItem("spotify_refresh_token");
 
@@ -128,7 +138,7 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
         client_id: clientId
       }),
     }
-    fetch(tokenUrl, payload)
+    await fetch(tokenUrl, payload)
       .then(res => res.json())
       .then(body => {
         console.log(body);
@@ -138,8 +148,6 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
         if (body.refresh_token) {
           localStorage.setItem("spotify_refresh_token", body.refresh_token);
         }
-
-        getUserDetails()
       })
   }
 
@@ -147,12 +155,88 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
     localStorage.removeItem("spotify_code_verifier");
     localStorage.removeItem("spotify_access_token");
     localStorage.removeItem("spotify_refresh_token");
-  
-    Navigate("/");
+    localStorage.removeItem("user__display_name");
+    localStorage.removeItem("user__display_image_url");
+    localStorage.removeItem("user__liked_song_count");
+    localStorage.removeItem("user__earliest_liked_song");
+
+    Navigate(0);
   }
 
-  function getUserDetails() {
+
+  async function getLikedSongDetails() {
     const accessToken = localStorage.getItem("spotify_access_token");
+    if (accessToken === null) return;
+
+    const url = new URL("https://api.spotify.com/v1/me/tracks");
+    const params =  {
+      offset: "1",
+      limit: "1"
+    }
+    url.search = new URLSearchParams(params).toString();
+
+    const payload = {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + accessToken
+      }
+    };
+    const likedSongCount = await fetch(url.toString(), payload)
+      .then(res => res.json())
+      .then(body => {
+        console.log(body);
+        return body.total;
+      });
+    if (likedSongCount === null) return;
+
+    const url2 = new URL("https://api.spotify.com/v1/me/tracks");
+    const params2 =  {
+      offset: String(likedSongCount - 1),
+      limit: "1"
+    }
+    url2.search = new URLSearchParams(params2).toString();
+
+    const payload2 = {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + accessToken
+      }
+    };
+    const earliestAddDate = await fetch(url2.toString(), payload2)
+      .then(res => res.json())
+      .then(body => {
+        console.log(body);
+        return body.items?.[0]?.added_at;
+      });
+    if (earliestAddDate === null) return;
+
+    return {
+      likedSongCount: likedSongCount,
+      earliestAddDate: earliestAddDate
+    }
+  }
+
+
+  async function getUserDetails() {
+    let possibleDisplayName = localStorage.getItem("user__display_name");
+    let possibleDisplayImageUrl = localStorage.getItem("user__display_image_url");
+    if (possibleDisplayName && possibleDisplayImageUrl) {
+      let possibleLikedSongCount = localStorage.getItem("user__liked_song_count");
+      let possibleEarliestAddDate = localStorage.getItem("user__earliest_liked_song");
+
+      setCurrentUser({
+        displayName: possibleDisplayName,
+        displayImageUrl: possibleDisplayImageUrl,
+        likedSongCount: Number(possibleLikedSongCount),
+        earliestLikedSong: possibleEarliestAddDate ? new Date(possibleEarliestAddDate) : null
+      });
+
+      return;
+    }
+
+    const accessToken = localStorage.getItem("spotify_access_token");
+    if (accessToken === null) return;
+
     const url = "https://api.spotify.com/v1/me";
 
     const payload = {
@@ -161,18 +245,36 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
         "Authorization": "Bearer " + accessToken
       }
     };
-    fetch(url, payload)
+    await fetch(url, payload)
       .then(res => res.json())
-      .then(body => {
+      .then(async body => {
         console.log(body);
 
-        const displayName = body.display_name;
-        const displayImageUrl = body.images?.[1]?.url;
+        if (body.error?.status === 401) {
+          await refreshAccessToken();
+          getUserDetails();
+        }
+        else {
+          const displayName = body.display_name;
+          const displayImageUrl = body.images?.[1]?.url;
 
-        setCurrentUser({
-          displayName: displayName,
-          displayImageUrl: displayImageUrl
-        })
+          if (displayName && displayImageUrl) {
+            localStorage.setItem("user__display_name", displayName);
+            localStorage.setItem("user__display_image_url", displayImageUrl);
+
+            let possibleLikedSongDetails = await getLikedSongDetails();
+            if (possibleLikedSongDetails?.likedSongCount) localStorage.setItem("user__liked_song_count", possibleLikedSongDetails?.likedSongCount)
+            if (possibleLikedSongDetails?.earliestAddDate) localStorage.setItem("user__earliest_liked_song", possibleLikedSongDetails?.earliestAddDate)
+
+            setCurrentUser({
+              displayName: displayName,
+              displayImageUrl: displayImageUrl,
+              likedSongCount: possibleLikedSongDetails?.likedSongCount,
+              earliestLikedSong: possibleLikedSongDetails?.earliestAddDate ? new Date(possibleLikedSongDetails?.earliestAddDate) : null
+            });
+          } 
+
+        }
       });
   }
 

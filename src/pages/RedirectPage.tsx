@@ -7,7 +7,7 @@ export default function RedirectPage() {
 
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code")
-  if (code !== null) {
+  if (code !== null && localStorage.getItem("spotify_access_token") === null) {
     console.log(code)
     const SpotifyApi = useSpotify();
     SpotifyApi?.getAccessToken(code);

@@ -34,9 +34,6 @@
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-
   font-size: var(--fs-body);
   color: var(--clr-base-900);
   background: var(--clr-base-100);

@@ -92,6 +92,14 @@ a {
 .primary-button:hover {
   background: var(--clr-base-700);
 }
+.button-with-logo {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.button-with-logo img {
+  width: 1.5rem;
+}
 
 
 nav,
@@ -155,6 +163,17 @@ footer {
   font-size: var(--fs-title);
   font-weight: var(--fw-bold);
   text-align: center;
+}
+
+.main__login-section {
+  margin-block-start: 3rem;
+}
+.main__playlist {
+  margin-block-start: 5rem;
+}
+.main__playlist-input {
+  width: 40ch;
+  padding: 0.25rem 0.5rem;
 }
 
 .spotify-track {

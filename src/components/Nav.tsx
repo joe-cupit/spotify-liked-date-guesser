@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom"
 import { useSpotify } from "../contexts/SpotifyContext"
 
+import SpotifyLogo from "../assets/spotify-logo-black.svg"
+
 
 export default function Nav() {
 
@@ -28,10 +30,10 @@ export default function Nav() {
               </button>
             </>
           : <button id="navbar__login-button"
-              className="primary-button"
+              className="primary-button button-with-logo"
               onClick={() => SpotifyApi?.initiateLogin()}
             >
-              Log in
+              <img src={SpotifyLogo} alt="" /> Log in
             </button>
           }
         </div>

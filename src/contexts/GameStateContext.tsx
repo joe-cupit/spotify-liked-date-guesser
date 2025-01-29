@@ -21,7 +21,8 @@ type GameState = {
   initiateGame: Function,
   scoreRound: Function,
   nextRound: Function,
-  endGame: Function
+  endGame: Function,
+  newGame: Function
 }
 
 const GameStateContext = createContext<GameState>({
@@ -37,7 +38,8 @@ const GameStateContext = createContext<GameState>({
   initiateGame: Function,
   scoreRound: Function,
   nextRound: Function,
-  endGame: Function
+  endGame: Function,
+  newGame: Function
 });
 
 
@@ -98,6 +100,12 @@ export function GameStateProvider({ children } : {children: JSX.Element} ) {
     setGameOver(true);
   }
 
+  function newGame() {
+    setTrackList([])
+    setScoreList([])
+    setGuessList([])
+  }
+
 
   const value = {
     totalRounds: maxGameRounds,
@@ -112,7 +120,8 @@ export function GameStateProvider({ children } : {children: JSX.Element} ) {
     initiateGame: initiateGame,
     scoreRound: scoreRound,
     nextRound: nextRound,
-    endGame: endGame
+    endGame: endGame,
+    newGame: newGame
   }
 
   return (

@@ -8,7 +8,6 @@ import MainPage from './pages/MainPage';
 import RedirectPage from './pages/RedirectPage';
 import { useCallback, useEffect } from 'react';
 import { useSpotify } from './contexts/SpotifyContext';
-import PlayPage from './pages/PlayPage';
 
 
 function App() {
@@ -29,7 +28,6 @@ function App() {
     <Nav />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/play" element={<PlayPage />} />
         <Route path="/redirect" element={<RedirectPage />} />
       </Routes>
     <Footer />

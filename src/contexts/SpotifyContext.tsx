@@ -37,7 +37,7 @@ export function useSpotify() {
 
 export function SpotifyProvider({ children } : JSX.Element | any ) {
 
-  const clientId = "d7d1414204354290bfe9edd85a923ff9";
+  const clientId = "e3320fa9fc474905b90a4fd15a005a44";
   const redirectUri = "http://localhost:5173/redirect"
 
   const [currentUser, setCurrentUser] = useState<SpotifyUser>(null)
@@ -120,6 +120,8 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
         getUserDetails();
       })
       .finally(() => Navigate("/"));
+
+    localStorage.removeItem("spotify_code_verifier");
   }
 
   async function refreshAccessToken() {

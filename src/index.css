@@ -3,3 +3,11 @@
   flex-direction: column;
   min-height: 100vh;
 }
+
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}

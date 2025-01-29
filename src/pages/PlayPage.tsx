@@ -1,10 +1,12 @@
 import { useState } from "react";
-import DatePicker from "../components/DatePicker";
+
 import { GameStateProvider, useGameState } from "../contexts/GameStateContext"
 import { useSpotify, Track } from "../contexts/SpotifyContext";
+
+import DatePicker from "../components/DatePicker";
 import DisplayTrack from "../components/DisplayTrack";
+
 import { generateRandomInt } from "../utils/randomNumber";
-import { useNavigate } from "react-router-dom";
 
 
 export default function PlayPage() {
@@ -20,10 +22,27 @@ export default function PlayPage() {
 function GameControlPage() {
 
   const gameState = useGameState();
+
+  if (gameState.tracks.length > 0) {
+    if (gameState.isGameOver) return <GameEndPage />
+    else return <RoundPlayPage />
+  }
+  else {
+    return <InitialGamePage />
+  }
+}
+
+
+function InitialGamePage() {
+
+  const [loading, setLoading] = useState(false);
+
+  const gameState = useGameState();
   const SpotifyApi = useSpotify();
 
   async function getRandomLikedSongs(n : number) {
     if (!SpotifyApi?.currentUser?.likedSongCount) return;
+    setLoading(true);
 
     let likedSongCount = SpotifyApi?.currentUser?.likedSongCount;
 
@@ -48,21 +67,39 @@ function GameControlPage() {
     }
 
     console.log(randomTracks);
-    gameState.initiateGame(randomTracks)
+    gameState.initiateGame(randomTracks);
+    setLoading(false);
   };
 
 
-  return (
-    <main>
-      {gameState.tracks.length > 0
-        ? gameState.isGameOver
-          ? <GameEndPage />
-          : <RoundPlayPage />
-        : <div className="main">
-            <button className="primary-button" onClick={() => getRandomLikedSongs(gameState.totalRounds)}>Start</button>
-          </div>
-      }
-    </main>
+  if (loading) return (
+    <div className="main">
+      <p>Preparing <b>six</b> random songs from your <b>{SpotifyApi?.currentUser?.likedSongCount}</b> liked songs...</p>
+    </div>
+  )
+  else return (
+    <div className="main">
+      <div className="flex-column">
+        <h1 className="title">Liked Song Guesser</h1>
+        <p>How well do you know your music listening history?</p>
+      </div>
+
+      <p>Since <b>{SpotifyApi?.currentUser?.earliestLikedSong?.toLocaleDateString()}</b> you've saved <b>{SpotifyApi?.currentUser?.likedSongCount}</b> to your liked songs!</p>
+
+      <div className="flex-column">
+        <p>Time to rediscover your past musical tastes.</p>
+        <button className="primary-button" onClick={() => getRandomLikedSongs(gameState.totalRounds)}>Start game</button>
+      </div>
+
+      {/*
+      <div className="flex-column main__playlist">
+        <p>Prefer to listen using playlists?</p>
+        <p>Paste the link to one here to use that instead.</p>
+        <input type="text" className="main__playlist-input" placeholder="https://open.spotify.com/playlist/{playlist-id}" />
+        <button className="primary-button">Use this playlist</button>
+      </div>
+      */}
+    </div>
   )
 }
 
@@ -134,7 +171,6 @@ function RoundPlayPage() {
 
 function GameEndPage() {
 
-  const Navigate = useNavigate()
   const gameState = useGameState()
 
   return (
@@ -178,7 +214,7 @@ function GameEndPage() {
         </div>
       </div>
 
-      <button className="primary-button" onClick={() => Navigate(0)}>Play again</button>
+      <button className="primary-button" onClick={() => gameState.newGame()}>Play again</button>
     </div>
   )
 }

@@ -222,13 +222,13 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
   async function getUserDetails() {
     let possibleDisplayName = localStorage.getItem("user__display_name");
     let possibleDisplayImageUrl = localStorage.getItem("user__display_image_url");
-    if (possibleDisplayName && possibleDisplayImageUrl) {
+    if (possibleDisplayName) {
       let possibleLikedSongCount = localStorage.getItem("user__liked_song_count");
       let possibleEarliestAddDate = localStorage.getItem("user__earliest_liked_song");
 
       setCurrentUser({
         displayName: possibleDisplayName,
-        displayImageUrl: possibleDisplayImageUrl,
+        displayImageUrl: possibleDisplayImageUrl ?? "",
         likedSongCount: Number(possibleLikedSongCount),
         earliestLikedSong: possibleEarliestAddDate ? new Date(possibleEarliestAddDate) : null
       });
@@ -258,9 +258,9 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
         }
         else {
           const displayName = body.display_name;
-          const displayImageUrl = body.images?.[1]?.url;
+          const displayImageUrl = body.images?.[1]?.url ?? "";
 
-          if (displayName && displayImageUrl) {
+          if (displayName) {
             localStorage.setItem("user__display_name", displayName);
             localStorage.setItem("user__display_image_url", displayImageUrl);
 

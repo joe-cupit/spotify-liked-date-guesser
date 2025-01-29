@@ -1,4 +1,4 @@
-import { Track } from "../pages/MainPage";
+import { Track } from "../contexts/SpotifyContext";
 
 
 export default function DisplayTrack({ track } : { track: Track | null }) {

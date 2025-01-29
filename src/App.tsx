@@ -6,20 +6,16 @@ import { Route, Routes } from 'react-router-dom';
 
 import MainPage from './pages/MainPage';
 import RedirectPage from './pages/RedirectPage';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSpotify } from './contexts/SpotifyContext';
 
 
 function App() {
   
   const SpotifyApi = useSpotify();
-  const checkForCurrentUser = useCallback(() => {
-    SpotifyApi?.getUserDetails();
-  }, [])
-
 
   useEffect(() => {
-    checkForCurrentUser();
+    SpotifyApi?.getUserDetails();
   }, [])
 
 

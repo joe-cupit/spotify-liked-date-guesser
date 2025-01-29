@@ -1,20 +1,23 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { useSpotify } from "../contexts/SpotifyContext"
+import { useEffect } from "react";
 
 
 export default function RedirectPage() {
-
   const [searchParams] = useSearchParams();
-  const code = searchParams.get("code")
-  if (code !== null && localStorage.getItem("spotify_access_token") === null) {
-    console.log(code)
-    const SpotifyApi = useSpotify();
-    SpotifyApi?.getAccessToken(code);
-  }
-  else {
-    useNavigate()("/");
-  }
+  const SpotifyApi = useSpotify();
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (code !== null && localStorage.getItem("spotify_access_token") === null) {
+      console.log(code)
+      SpotifyApi?.getAccessToken(code);
+    }
+    else {
+      useNavigate()("/");
+    }
+  }, [])
 
 
   return (

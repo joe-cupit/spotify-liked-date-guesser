@@ -3,12 +3,18 @@ import { Track } from './SpotifyContext';
 import { getDateDifferenceInDays } from '../utils/dateDifference';
 
 
+type Guess = {
+  date: Date,
+  daysWrong: number
+} | null
+
 type GameState = {
   totalRounds: number,
   roundNumber: number,
   tracks: Track[],
   currentTrack: Track | null,
   scores: number[],
+  guesses: Guess[],
   isGameOver: boolean,
   isFinalRound: boolean,
 
@@ -24,6 +30,7 @@ const GameStateContext = createContext<GameState>({
   tracks: [],
   currentTrack: null,
   scores: [],
+  guesses: [],
   isGameOver: false,
   isFinalRound: false,
 
@@ -47,6 +54,7 @@ export function GameStateProvider({ children } : {children: JSX.Element} ) {
   const [roundNumber, setRoundNumber] = useState(1);
   const [trackList, setTrackList] = useState<Track[]>([]);
   const [scoreList, setScoreList] = useState<number[]>(Array(maxGameRounds).fill(0));
+  const [guessList, setGuessList] = useState<Guess[]>(Array(maxGameRounds).fill(null))
   const [gameOver, setGameOver] = useState(false);
 
   const currentTrack = useMemo(() => {
@@ -67,6 +75,13 @@ export function GameStateProvider({ children } : {children: JSX.Element} ) {
       prev[roundNumber-1] = score;
       return prev;
     });
+    setGuessList(prev => {
+      prev[roundNumber-1] = {
+        date: guessDate,
+        daysWrong: daysWrong
+      };
+      return prev;
+    })
     return [daysWrong, score];
   }
 
@@ -90,6 +105,7 @@ export function GameStateProvider({ children } : {children: JSX.Element} ) {
     tracks: trackList,
     currentTrack: currentTrack,
     scores: scoreList,
+    guesses: guessList,
     isGameOver: gameOver,
     isFinalRound: roundNumber === maxGameRounds,
 

@@ -41,6 +41,10 @@ body {
   min-height: 100vh;
 }
 
+b {
+  font-weight: var(--fw-medium);
+}
+
 nav,
 main,
 footer {
@@ -146,9 +150,6 @@ footer {
 
   padding-block: 1em;
 }
-.play-page {
-  gap: 3rem;
-}
 
 .title {
   font-size: var(--fs-title);
@@ -203,4 +204,65 @@ footer {
 }
 .date-input__group_month {
   min-width: 9ch;
+}
+
+.play-page {
+  gap: 2.5rem;
+}
+.play-results {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+}
+.play-results__date-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.play-results__big {
+  font-size: 2rem;
+  font-weight: var(--fw-medium);
+}
+
+
+.game-end__score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-end__overview {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  column-gap: 1rem;
+  row-gap: 1rem;
+  align-items: center;
+}
+.game-end__overview-heading,
+.game-end__overview-total {
+  display: contents;
+}
+.game-end__overview-center {
+  text-align: center;
+}
+.game-end__overview-right {
+  text-align: right;
+}
+
+.game-end__track {
+  display: contents;
+  align-items: end;
+}
+.game-end__track-image {
+  --_image-size: 4rem;
+  width: var(--_image-size);
+  height: var(--_image-size);
+}
+.game-end__track-name {
+  font-size: 1.5rem;
+  font-weight: var(--fw-medium);
+}
+.game-end__track-artists {
+  font-size: 1rem;
 }

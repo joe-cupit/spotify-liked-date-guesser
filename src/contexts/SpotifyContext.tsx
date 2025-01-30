@@ -6,7 +6,8 @@ export type Track = {
   name: string,
   artists: string[],
   albumCover: string,
-  addedDate: Date
+  addedDate: Date,
+  spotifyUrl: string
 }
 
 type SpotifyUser = {
@@ -23,7 +24,8 @@ type SpotifyApi = {
   refreshAccessToken: Function,
   getUserDetails: Function,
   logOut: Function,
-  getLikedSongAt: Function
+  getLikedSongAt: Function,
+  getPlaylistSongAt: Function
 } | null
 
 
@@ -309,6 +311,35 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
   }
 
 
+  async function getPlaylistSongAt(index: number, playlistId: string) {
+    const accessToken = localStorage.getItem("spotify_access_token");
+
+    const url = new URL(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`);
+    const params =  {
+      offset: String(index),
+      limit: "1"
+    }
+    url.search = new URLSearchParams(params).toString();
+
+    const payload = {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + accessToken
+      }
+    };
+    const track = await fetch(url.toString(), payload)
+      .then(res => res.json())
+      .then(body => {
+        console.log(body);
+
+        const tracks = body.items;
+        return tracks[0]
+      });
+
+    return track
+  }
+
+
   const value = {
     currentUser: currentUser,
     initiateLogin: initiateLogin,
@@ -316,7 +347,8 @@ export function SpotifyProvider({ children } : JSX.Element | any ) {
     refreshAccessToken: refreshAccessToken,
     getUserDetails: getUserDetails,
     logOut: logOut,
-    getLikedSongAt: getLikedSongAt
+    getLikedSongAt: getLikedSongAt,
+    getPlaylistSongAt: getPlaylistSongAt
   }
 
   return (

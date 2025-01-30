@@ -60,7 +60,8 @@ function InitialGamePage() {
         name: trackDetails?.name,
         artists: trackDetails?.artists?.map((a : any) => a.name),
         albumCover: trackDetails?.album?.images?.[0]?.url,
-        addedDate: new Date(likedSong?.added_at)
+        addedDate: new Date(likedSong?.added_at),
+        spotifyUrl: trackDetails?.external_urls?.spotify
       }
 
       randomTracks.push(track)
@@ -90,6 +91,8 @@ function InitialGamePage() {
         <p>Time to rediscover your past musical tastes.</p>
         <button className="primary-button" onClick={() => getRandomLikedSongs(gameState.totalRounds)}>Start game</button>
       </div>
+
+      <button className="primary-button" onClick={() => SpotifyApi?.getPlaylistSongAt(3, "0uMln5ULFts7shmMsJBS7C")}>Get random playlist song</button>
 
       {/*
       <div className="flex-column main__playlist">
@@ -147,13 +150,13 @@ function RoundPlayPage() {
         : <>
             <div className="play-results">
               <div className="play-results__date-group">
-                Actual date added to your liked songs:
-                <p className="play-results__big">{gameState.currentTrack?.addedDate.toLocaleDateString()}</p>
+                You were out by:
+                <p><b className="play-results__big">{currentDaysOut} days</b></p>
               </div>
-              <div className="play-results__date-group">
-                <p>That's <b>{currentDaysOut}</b> days difference from your guess of <b>{currentDate.toLocaleDateString()}</b></p>
-              </div>
-              <p>Scoring <span className="play-results__big">{currentScore.toLocaleString()}</span>/5,000 pts.</p>
+
+              <p>You guessed <b>{currentDate.toLocaleDateString()}</b>, but you actually saved this on <b>{gameState.currentTrack?.addedDate.toLocaleDateString()}</b>.</p>
+
+              <p>Scoring <span className="play-results__big">{currentScore.toLocaleString()}</span>/5,000 pts</p>
             </div>
 
             {
@@ -183,7 +186,6 @@ function GameEndPage() {
       <div className="game-end__overview">
         <div className="game-end__overview-heading">
           <p>Track</p>
-          <p></p>
           <p className="game-end__overview-center">Date</p>
           <p className="game-end__overview-right">Days out</p>
           <b className="game-end__overview-right">Score</b>
@@ -191,11 +193,13 @@ function GameEndPage() {
         {gameState.tracks.map((track: Track, index: number) => {
           return (
             <div key={index} className="game-end__track">
-              <img className="game-end__track-image" src={track.albumCover} alt={track.name + " album cover"} />
-              <div>
-                <p className="game-end__track-name">{track.name}</p>
-                <p className="game-end__track-artists">{track.artists.join(", ")}</p>
-              </div>
+              <a className="game-end__track-link" href={track?.spotifyUrl} target="_blank">
+                <img className="game-end__track-image" src={track.albumCover} alt={track.name + " album cover"} />
+                <div>
+                  <p className="game-end__track-name">{track.name}</p>
+                  <p className="game-end__track-artists">{track.artists.join(", ")}</p>
+                </div>
+              </a>
               <div className="game-end__overview-center">
                 <p>{gameState.guesses[index]?.date.toLocaleDateString()}</p>
                 <b>{track.addedDate.toLocaleDateString()}</b>
@@ -206,7 +210,6 @@ function GameEndPage() {
           )
         })}
         <div className="game-end__overview-total">
-          <p></p>
           <p></p>
           <p></p>
           <p className="game-end__overview-right">Total:</p>
